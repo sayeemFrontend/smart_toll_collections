@@ -1,23 +1,26 @@
 import React, { useState, useEffect } from 'react'
+import { useDispatch } from 'react-redux'
+import { setDarkMode } from '../../../stores/darkModeSlice'
+import { useAppSelector } from '../../../stores/hooks'
 // import { useDispatch } from 'react-redux'
 // import { setDarkMode, } from '../../../stores/darkModeSlice'
 // import { useDarkMode } from '../../../hooks/useDarkMode'
 
 export default function ThemeChanger() {
-  // const dispatch = useDispatch()
-  const theme = 'light' || 'dark'
+  const dispatch = useDispatch()
+  const isDark = useAppSelector((state) => state.darkMode)
+
   const [mounted, setMounted] = useState(false)
 
-  // When mounted on client, now we can show the UI
   useEffect(() => setMounted(true), [])
 
   if (!mounted) return null
 
   return (
     <div className="flex items-center">
-      {theme === 'dark' ? (
+      {isDark ? (
         <button
-          // onClick={() => dis}
+          onClick={() => dispatch(setDarkMode(isDark ? null : true))}
           className="text-gray-300 rounded-full outline-none focus:outline-none"
         >
           <span className="sr-only">Light Mode</span>
@@ -33,7 +36,7 @@ export default function ThemeChanger() {
         </button>
       ) : (
         <button
-          // onClick={() => toggleTheme}
+          onClick={() => dispatch(setDarkMode(isDark ? null : true))}
           className="text-gray-500 rounded-full outline-none focus:outline-none focus-visible:ring focus-visible:ring-gray-100 focus:ring-opacity-20"
         >
           <span className="sr-only">Dark Mode</span>

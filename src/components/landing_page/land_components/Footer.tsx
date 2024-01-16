@@ -2,6 +2,8 @@ import Link from 'next/link'
 import Image from 'next/image'
 import React from 'react'
 import Container from './Container'
+import logo from '../land_components/img/logo.svg'
+import verImage from '../land_components/img/vercel.svg'
 
 export default function Footer() {
   const navigation = ['Product', 'Features', 'Pricing', 'Company', 'Blog']
@@ -12,12 +14,11 @@ export default function Footer() {
         <div className="grid max-w-screen-xl grid-cols-1 gap-10 pt-10 mx-auto mt-5 border-t border-gray-100 dark:border-trueGray-700 lg:grid-cols-5">
           <div className="lg:col-span-2">
             <div>
-              {' '}
               <Link
                 href="/"
                 className="flex items-center space-x-2 text-2xl font-medium text-indigo-500 dark:text-gray-100"
               >
-                <Image src="/img/logo.svg" alt="N" width="32" height="32" className="w-8" />
+                <Image src={logo} alt="N" width="32" height="32" className="w-8" />
                 <span>Nextly</span>
               </Link>
             </div>
@@ -34,7 +35,7 @@ export default function Footer() {
                 rel="noopener"
                 className="relative block w-44"
               >
-                <Image src="/img/vercel.svg" alt="Powered by Vercel" width="212" height="44" />
+                <Image src={verImage} alt="Powered by Vercel" width="212" height="44" />
               </a>
             </div>
           </div>

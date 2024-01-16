@@ -1,0 +1,44 @@
+import { AnyObject } from 'chart.js/dist/types/basic'
+import { TokensType } from './api_types'
+import { credentials } from './credentials'
+import { getApi, navigateTo, postApi } from './methods'
+import { store } from '../../stores/store'
+import { userInfoFail, userInfoSuccess } from '../../stores/userSlice'
+
+export const SUPER_ADMIN = 1
+export const CUSTOMER_ADMIN = 2
+export const CUSTOMER_USER = 3
+export const USER_VIEWS_ONLY = 5
+export const refreshTime = 1000 * 25
+
+export async function getUserInfo() {
+  await getApi({
+    end_point: `user/myinfo`,
+    resolve: (res: AnyObject) => {
+      const { data } = res
+      store.dispatch(userInfoSuccess({ data }))
+      navigateTo('/dashboard')
+    },
+    reject: () => {
+      store.dispatch(userInfoFail())
+    },
+    responseAlert: true,
+  })
+}
+
+const resolve = async (response: TokensType) => {
+  const { token, refreshToken } = response
+  await credentials.setTokens({ token, refreshToken })
+  await getUserInfo()
+}
+const reject = (error) => {
+  console.log('reject', error)
+}
+export async function loginByToken(body = {}) {
+  return await postApi({
+    end_point: 'auth/user/login',
+    body: body,
+    resolve: resolve,
+    reject: reject,
+  })
+}

@@ -20,24 +20,30 @@ const menuAside: MenuAsideItem[] = [
     icon: mdiMonitor,
     label: 'Dashboard',
   },
+
   {
-    href: '/tables',
-    label: 'Tables',
+    href: '/users',
+    label: 'Users',
     icon: mdiTable,
   },
   {
-    href: '/forms',
-    label: 'Forms',
-    icon: mdiSquareEditOutline,
-  },
-  {
-    href: '/ui',
-    label: 'UI',
+    href: '/account-balance',
+    label: 'Account Balance',
     icon: mdiTelevisionGuide,
   },
   {
-    href: '/responsive',
-    label: 'Responsive',
+    href: '/nfc-cards',
+    label: 'NFC Cards',
+    icon: mdiSquareEditOutline,
+  },
+  {
+    href: '/user-vehicle',
+    label: 'User Vehicle',
+    icon: mdiTelevisionGuide,
+  },
+  {
+    href: '/nfc-scanner-device',
+    label: 'NFC Scanner Device',
     icon: mdiResponsive,
   },
   {
@@ -46,9 +52,19 @@ const menuAside: MenuAsideItem[] = [
     icon: mdiPalette,
   },
   {
-    href: '/profile',
-    label: 'Profile',
+    href: '/operator-scanner-device',
+    label: 'Operator Scanner Device',
     icon: mdiAccountCircle,
+  },
+  {
+    href: '/account-balance-refill-logs',
+    label: 'Account Balance Refill',
+    icon: mdiResponsive,
+  },
+  {
+    href: '/transaction-logs',
+    label: 'Transaction Logs',
+    icon: mdiSquareEditOutline,
   },
   {
     href: '/login',

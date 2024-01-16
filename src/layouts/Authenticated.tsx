@@ -85,7 +85,7 @@ export default function LayoutAuthenticated({ children }: Props) {
         />
         {children}
         <FooterBar>
-          Get more with{` `}
+          Get more with
           <a
             href="https://tailwind-react.justboil.me/dashboard"
             target="_blank"

@@ -6,6 +6,7 @@ import Button from '../Button'
 import Buttons from '../Buttons'
 import CardBoxModal from '../CardBox/Modal'
 import UserAvatar from '../UserAvatar'
+import CustomTable from './CustomTable'
 
 const TableSampleClients = () => {
   const { clients } = useSampleClients()
@@ -61,12 +62,23 @@ const TableSampleClients = () => {
         </p>
         <p>This is sample modal</p>
       </CardBoxModal>
+      <CustomTable
+        actions={{ add: () => setIsModalInfoActive(true), del: () => setIsModalTrashActive(true) }}
+        dataList={clients}
+        headers={[
+          { key: 'name', label: 'Name' },
+          { key: 'company', label: 'Company' },
+          { key: 'city', label: 'City' },
+          { key: 'name', label: 'Name' },
+          { key: 'created', label: 'Created' },
+        ]}
+      />
 
-      <table>
+      {/* <table>
         <thead>
           <tr>
             <th />
-            <th>Name</th>
+            <th></th>
             <th>Company</th>
             <th>City</th>
             <th>Progress</th>
@@ -114,8 +126,8 @@ const TableSampleClients = () => {
             </tr>
           ))}
         </tbody>
-      </table>
-      <div className="p-3 lg:px-6 border-t border-gray-100 dark:border-slate-800">
+      </table> */}
+      {/* <div className="p-3 lg:px-6 border-t border-gray-100 dark:border-slate-800">
         <div className="flex flex-col md:flex-row items-center justify-between py-3 md:py-0">
           <Buttons>
             {pagesList.map((page) => (
@@ -133,7 +145,7 @@ const TableSampleClients = () => {
             Page {currentPage + 1} of {numPages}
           </small>
         </div>
-      </div>
+      </div> */}
     </>
   )
 }

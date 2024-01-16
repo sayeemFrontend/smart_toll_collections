@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 
-interface DarkModeState {
+export interface DarkModeState {
   isEnabled: boolean
 }
 

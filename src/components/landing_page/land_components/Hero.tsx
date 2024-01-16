@@ -1,6 +1,6 @@
 import Image from 'next/image'
 import Container from './Container'
-import heroImg from '../land_components/img/hero.png'
+import heroImg from '../land_components/img/think/toll.jpg'
 
 const Hero = () => {
   return (

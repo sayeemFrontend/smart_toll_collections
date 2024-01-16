@@ -42,7 +42,7 @@ export default function Benefits(props) {
 
             <div className="w-full mt-5">
               {data?.bullets?.map((item, index) => (
-                <Benefit key={index} title={item.title} icon={''}>
+                <Benefit key={index} title={item.title} icon={item.icon}>
                   {item.desc}
                 </Benefit>
               ))}
@@ -55,12 +55,12 @@ export default function Benefits(props) {
 }
 
 function Benefit(props) {
-  // const Icon = props.icon
+  const Icon = () => <props.icon />
   return (
     <>
       <div className="flex items-start mt-8 space-x-3">
         <div className="flex items-center justify-center flex-shrink-0 mt-1 bg-indigo-500 rounded-md w-11 h-11 ">
-          {React.cloneElement(<h2>Icon will be</h2>, {
+          {React.cloneElement(<div>{Icon()}</div>, {
             className: 'w-7 h-7 text-indigo-50',
           })}
         </div>
