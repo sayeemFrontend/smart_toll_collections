@@ -11,7 +11,7 @@ export type HeaderType = {
 }
 type PropsType = {
   headers: HeaderType[]
-  dataList: []
+  dataList: AnyObject[]
   tableHeading?: string
   valueExtractor?: (op: AnyObject) => void
   tableClass?: {
@@ -24,9 +24,9 @@ type PropsType = {
     bgBody?: string
   }
   actions?: {
-    add?: () => void
-    edit?: () => void
-    del?: () => void
+    add?: (item: AnyObject) => void
+    edit?: (item: AnyObject) => void
+    del?: (item: AnyObject) => void
   }
 }
 
@@ -85,8 +85,13 @@ export default function CustomTable({ headers, dataList = [], actions }: PropsTy
               {actions?.add && (
                 <td className="before:hidden lg:w-1 whitespace-nowrap">
                   <Buttons type="justify-start lg:justify-end" noWrap>
-                    <Button color="info" icon={mdiEye} onClick={actions.add} small />
-                    <Button color="danger" icon={mdiTrashCan} onClick={actions.del} small />
+                    <Button color="info" icon={mdiEye} onClick={() => actions.add(item)} small />
+                    <Button
+                      color="danger"
+                      icon={mdiTrashCan}
+                      onClick={() => actions.del(item)}
+                      small
+                    />
                   </Buttons>
                 </td>
               )}

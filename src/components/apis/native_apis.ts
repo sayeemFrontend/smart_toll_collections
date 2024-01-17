@@ -1,9 +1,10 @@
 import { AnyObject } from 'chart.js/dist/types/basic'
 import { TokensType } from './api_types'
 import { credentials } from './credentials'
-import { getApi, navigateTo, postApi } from './methods'
+import { getApi, postApi } from './methods'
 import { store } from '../../stores/store'
 import { userInfoFail, userInfoSuccess } from '../../stores/userSlice'
+import redirectToRoute from '../../utils/navigateTo'
 
 export const SUPER_ADMIN = 1
 export const CUSTOMER_ADMIN = 2
@@ -17,7 +18,7 @@ export async function getUserInfo() {
     resolve: (res: AnyObject) => {
       const { data } = res
       store.dispatch(userInfoSuccess({ data }))
-      navigateTo('/dashboard')
+      redirectToRoute('/dashboard')
     },
     reject: () => {
       store.dispatch(userInfoFail())

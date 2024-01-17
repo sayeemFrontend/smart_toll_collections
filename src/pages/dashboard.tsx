@@ -24,7 +24,7 @@ import CardBox from '../components/CardBox'
 import { sampleChartData } from '../components/ChartLineSample/config'
 import ChartLineSample from '../components/ChartLineSample'
 import NotificationBar from '../components/NotificationBar'
-import TableSampleClients from '../components/Table/SampleClients'
+import TableSampleClients from '../components/Table/UsersTable'
 import { getPageTitle } from '../config'
 
 const DashboardPage = () => {

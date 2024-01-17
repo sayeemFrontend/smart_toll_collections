@@ -9,3 +9,52 @@
 
 @import 'styles/_basic.css';
 @import 'styles/_white.css';
+
+@keyframes spinner {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+.loading-spinner {
+  position: absolute;
+  left: 50%;
+  margin-top: 70px;
+  transform: translate(-50%);
+  z-index: 99;
+  width: 40px;
+  height: 40px;
+  border-width: 8px;
+  border-top-width: 8px;
+  border-style: solid;
+  border-radius: 100%;
+  animation: spinner 1.5s linear infinite;
+  @apply border-t-gray-700 border-gray-200 dark:border-gray-500 dark:border-t-gray-700;
+}
+
+.paginationButtons {
+  width: 80%;
+  display: flex;
+  list-style: none;
+  justify-content: flex-end;
+}
+.paginationButtons a {
+  cursor: pointer;
+  margin: 3px;
+  padding: 5px;
+  min-width: 35px !important;
+  display: block;
+  text-align: center !important;
+  border-radius: 4px;
+  @apply bg-gray-300 dark:bg-gray-800;
+}
+
+.activePaginate a {
+  @apply bg-gray-500 dark:bg-gray-600;
+}
+
+.pagination-wrapper {
+  @apply my-4 overflow-x-auto;
+}

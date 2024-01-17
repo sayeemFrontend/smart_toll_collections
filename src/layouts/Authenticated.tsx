@@ -7,10 +7,11 @@ import Icon from '../components/Icon'
 import NavBar from '../components/NavBar'
 import NavBarItemPlain from '../components/NavBar/Item/Plain'
 import AsideMenu from '../components/AsideMenu'
-import FooterBar from '../components/FooterBar'
 import FormField from '../components/Form/Field'
 import { Field, Form, Formik } from 'formik'
 import { useRouter } from 'next/router'
+import { useUserInfo } from '../hooks/custom_hooks'
+import PermissionDenied from './PermissionDenied'
 
 type Props = {
   children: ReactNode
@@ -19,6 +20,7 @@ type Props = {
 export default function LayoutAuthenticated({ children }: Props) {
   const [isAsideMobileExpanded, setIsAsideMobileExpanded] = useState(false)
   const [isAsideLgActive, setIsAsideLgActive] = useState(false)
+  const { isAuthenticate } = useUserInfo()
 
   const router = useRouter()
 
@@ -30,15 +32,15 @@ export default function LayoutAuthenticated({ children }: Props) {
 
     router.events.on('routeChangeStart', handleRouteChangeStart)
 
-    // If the component is unmounted, unsubscribe
-    // from the event with the `off` method:
     return () => {
       router.events.off('routeChangeStart', handleRouteChangeStart)
     }
   }, [router.events])
 
   const layoutAsidePadding = 'xl:pl-60'
+  console.log(isAuthenticate)
 
+  if (!isAuthenticate()) return <PermissionDenied />
   return (
     <div className={`overflow-hidden lg:overflow-visible`}>
       <div
@@ -84,17 +86,6 @@ export default function LayoutAuthenticated({ children }: Props) {
           onAsideLgClose={() => setIsAsideLgActive(false)}
         />
         {children}
-        <FooterBar>
-          Get more with
-          <a
-            href="https://tailwind-react.justboil.me/dashboard"
-            target="_blank"
-            rel="noreferrer"
-            className="text-blue-600"
-          >
-            Premium version
-          </a>
-        </FooterBar>
       </div>
     </div>
   )

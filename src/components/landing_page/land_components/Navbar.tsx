@@ -5,6 +5,7 @@ import { Disclosure } from '@headlessui/react'
 import logo from '../land_components/img/logo.svg'
 import CustomPopup from './CustomPopup'
 import LoginForm from '../../Form/LoginForm'
+import SignUpForm from '../../Form/SignUpForm'
 
 const Navbar = () => {
   const navigation = ['Product', 'Features', 'Pricing', 'Company', 'Blog']
@@ -89,7 +90,7 @@ const Navbar = () => {
             headerClass="inline-block lg:px-4 py-2 text-lg font-normal text-gray-800 no-underline rounded-md dark:text-gray-200 hover:text-indigo-500 focus:text-indigo-500 focus:bg-indigo-100 focus:outline-none dark:focus:bg-gray-800"
             body={
               <>
-                <input />
+                <SignUpForm />
               </>
             }
           />

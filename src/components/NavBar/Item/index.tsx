@@ -6,9 +6,10 @@ import Divider from '../../Divider'
 import Icon from '../../Icon'
 import UserAvatarCurrentUser from '../../UserAvatar/CurrentUser'
 import NavBarMenuList from '../MenuList'
-import { useAppDispatch, useAppSelector } from '../../../stores/hooks'
+import { useAppDispatch } from '../../../stores/hooks'
 import { MenuNavBarItem } from '../../../interfaces'
 import { setDarkMode } from '../../../stores/darkModeSlice'
+import { useUserInfo } from '../../../hooks/custom_hooks'
 
 type Props = {
   item: MenuNavBarItem
@@ -17,7 +18,7 @@ type Props = {
 export default function NavBarItem({ item }: Props) {
   const dispatch = useAppDispatch()
 
-  const userName = useAppSelector((state) => state.main.userName)
+  const { first_name, last_name } = useUserInfo()
 
   const [isDropdownActive, setIsDropdownActive] = useState(false)
 
@@ -30,7 +31,7 @@ export default function NavBarItem({ item }: Props) {
     item.isDesktopNoLabel ? 'lg:w-16 lg:justify-center' : '',
   ].join(' ')
 
-  const itemLabel = item.isCurrentUser ? userName : item.label
+  const itemLabel = item.isCurrentUser ? `${first_name} ${last_name}` : item.label
 
   const handleMenuClick = () => {
     if (item.menu) {
