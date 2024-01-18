@@ -1,3 +1,6 @@
+import { store } from '../stores/store'
+import { logout } from '../stores/userSlice'
+
 export function capitalize(str: string) {
   return str.slice(0, 1).toUpperCase() + str.slice(1)
 }
@@ -27,4 +30,8 @@ export function removeNullParams(params = {}) {
 export function joinQueryParam(obj = {}) {
   const stringArray = Object.keys(obj).map((item) => `${item}=${obj[item]}`)
   return stringArray.join('&')
+}
+
+export function makeLogout() {
+  store.dispatch(logout)
 }

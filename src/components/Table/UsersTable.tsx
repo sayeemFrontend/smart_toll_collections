@@ -7,19 +7,31 @@ import Suspender from '../suspender/Suspender'
 import CardBox from '../CardBox'
 import CardBoxComponentEmpty from '../CardBox/Component/Empty'
 import { PaginatedItems } from '../pagination/Paginate'
+import { notify } from '../Notify'
+import FormMaker from '../Form/FormMaker'
 
 export default function UsersTable() {
-  const { isError, isLoading, getItems, updateQuery, result } = useApiSlice({
+  const { isError, isLoading, getItems, delItems, updateQuery, result } = useApiSlice({
     page: 0,
     per_page: 10,
   })
   const { data = [], pagination } = result as { data: []; pagination: AnyObject }
-  const [isModalInfoActive, setIsModalInfoActive] = useState<null | AnyObject>(null)
-  const [isModalTrashActive, setIsModalTrashActive] = useState<null | AnyObject>(null)
+  const [isModalAdd, setIsModalAdd] = useState<null | AnyObject>(null)
+  const [isModalDel, setIsModalDel] = useState<null | AnyObject>(null)
 
-  const handleModalAction = () => {
-    setIsModalInfoActive(null)
-    setIsModalTrashActive(null)
+  const handleDelete = async () => {
+    const item = isModalDel as { id: number | string }
+    await delItems({
+      ids: [item.id],
+      endPoint: 'user/delete',
+      resolve: (res) => {
+        notify({ message: res.message })
+      },
+    })
+    setIsModalDel(null)
+  }
+  const handleCreate = () => {
+    // setIsModalAdd(null)
   }
 
   useEffect(() => {
@@ -36,34 +48,36 @@ export default function UsersTable() {
         title="Sample modal"
         buttonColor="info"
         buttonLabel="Done"
-        isActive={!!isModalInfoActive}
-        onConfirm={handleModalAction}
-        onCancel={handleModalAction}
+        isActive={!!isModalAdd}
+        onCancel={() => setIsModalAdd(null)}
+        actionBar={false}
       >
-        <p>
-          Lorem ipsum dolor sit amet <b>adipiscing elit</b>
-        </p>
-        <p>This is sample modal</p>
+        <FormMaker
+          handleFormSubmit={handleCreate}
+          formFields={[
+            { name: 'first_name', Label: 'First Name', helper: 'Enter your first name' },
+            { name: 'last_name', Label: 'Last Name', helper: 'Enter your last name' },
+            { name: 'mobile_number', Label: 'Mobile Number', helper: 'Enter your mobile number' },
+          ]}
+        />
       </CardBoxModal>
 
       <CardBoxModal
         title="Please confirm"
         buttonColor="danger"
         buttonLabel="Confirm"
-        isActive={!!isModalTrashActive}
-        onConfirm={handleModalAction}
-        onCancel={handleModalAction}
+        isActive={!!isModalDel}
+        onConfirm={handleDelete}
+        onCancel={() => setIsModalDel(null)}
       >
-        <p>
-          Lorem ipsum dolor sit amet <b>adipiscing elit</b>
-        </p>
-        <p>This is sample modal</p>
+        <p>User are going to remove from data list </p>
+        <p>Confirm if you are sure</p>
       </CardBoxModal>
       <Suspender isLoading={isLoading} isError={isError}>
         <CustomTable
           actions={{
-            add: (item) => setIsModalInfoActive(item),
-            del: (item) => setIsModalTrashActive(item),
+            add: (item) => setIsModalAdd(item),
+            del: (item) => setIsModalDel(item),
           }}
           dataList={data?.map((it: AnyObject) => ({
             ...it,

@@ -7,19 +7,31 @@ import Suspender from '../suspender/Suspender'
 import CardBox from '../CardBox'
 import CardBoxComponentEmpty from '../CardBox/Component/Empty'
 import { PaginatedItems } from '../pagination/Paginate'
+import { notify } from '../Notify'
 
 export default function BalanceRefillLogsTable() {
-  const { isError, isLoading, getItems, updateQuery, result } = useApiSlice({
+  const { isError, isLoading, getItems, delItems, updateQuery, result } = useApiSlice({
     page: 0,
     per_page: 10,
   })
   const { data = [], pagination } = result as { data: []; pagination: AnyObject }
-  const [isModalInfoActive, setIsModalInfoActive] = useState<null | AnyObject>(null)
-  const [isModalTrashActive, setIsModalTrashActive] = useState<null | AnyObject>(null)
+  const [isModalAdd, setIsModalAdd] = useState<null | AnyObject>(null)
+  const [isModalDel, setIsModalDel] = useState<null | AnyObject>(null)
 
-  const handleModalAction = () => {
-    setIsModalInfoActive(null)
-    setIsModalTrashActive(null)
+  const handleDeleteItems = async () => {
+    const item = isModalDel as { id: number | string }
+    await delItems({
+      ids: [item.id],
+      endPoint: 'account-balance-refill-log/delete',
+      resolve: (res) => {
+        notify({ message: res.message })
+      },
+    })
+    setIsModalDel(null)
+  }
+
+  const handleAddItems = () => {
+    setIsModalAdd(null)
   }
 
   useEffect(() => {
@@ -37,9 +49,9 @@ export default function BalanceRefillLogsTable() {
         title="Sample modal"
         buttonColor="info"
         buttonLabel="Done"
-        isActive={!!isModalInfoActive}
-        onConfirm={handleModalAction}
-        onCancel={handleModalAction}
+        isActive={!!isModalAdd}
+        onConfirm={handleAddItems}
+        onCancel={() => setIsModalAdd(null)}
       >
         <p>
           Lorem ipsum dolor sit amet <b>adipiscing elit</b>
@@ -51,20 +63,18 @@ export default function BalanceRefillLogsTable() {
         title="Please confirm"
         buttonColor="danger"
         buttonLabel="Confirm"
-        isActive={!!isModalTrashActive}
-        onConfirm={handleModalAction}
-        onCancel={handleModalAction}
+        isActive={!!isModalDel}
+        onConfirm={handleDeleteItems}
+        onCancel={() => setIsModalDel(null)}
       >
-        <p>
-          Lorem ipsum dolor sit amet <b>adipiscing elit</b>
-        </p>
-        <p>This is sample modal</p>
+        <p>You are going to remove from data list </p>
+        <p>Confirm if you are sure</p>
       </CardBoxModal>
       <Suspender isLoading={isLoading} isError={isError}>
         <CustomTable
           actions={{
-            add: (item) => setIsModalInfoActive(item),
-            del: (item) => setIsModalTrashActive(item),
+            add: (item) => setIsModalAdd(item),
+            del: (item) => setIsModalDel(item),
           }}
           dataList={data?.map((it: AnyObject) => ({
             ...it,

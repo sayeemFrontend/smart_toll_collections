@@ -1,4 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit'
+import { navigateTo } from '../components/apis/methods'
 
 const userInfoSlice = createSlice({
   name: 'userInfo',
@@ -29,7 +30,7 @@ const userInfoSlice = createSlice({
     logout: () => {
       localStorage.clear()
       sessionStorage.clear()
-      window.location.replace('/login')
+      navigateTo('/')
     },
   },
 })

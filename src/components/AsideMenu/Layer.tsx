@@ -20,6 +20,7 @@ export default function AsideMenuLayer({ menu, className = '', ...props }: Props
     icon: mdiLogout,
     color: 'info',
     isLogout: true,
+    href: '/',
   }
 
   const handleAsideLgCloseClick = (e: React.MouseEvent) => {

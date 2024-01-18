@@ -20,7 +20,7 @@ export function notify(options: NotifyT) {
 
   const boxStyle = {
     textAlign: 'center',
-    color: 'blue',
+    color: 'white',
     width: 'max-content',
     height: 'max-content',
     position: 'fixed',
@@ -37,7 +37,7 @@ export function notify(options: NotifyT) {
   const contentStyle = {
     padding: '4px 8px',
     margin: '6px',
-    background: '#c5c4c4',
+    background: '#4241419c',
     ...content,
   }
   const ele = document.createElement('p')

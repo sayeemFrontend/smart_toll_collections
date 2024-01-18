@@ -93,7 +93,17 @@ export function useApiSlice(query: AnyObject) {
     result: { data: [], pagination: {} },
   })
   const getItems = useCallback(
-    async ({ endPoint = '', query = {} }: { endPoint: string; query?: object }) => {
+    async ({
+      endPoint = '',
+      query = {},
+      resolve,
+      reject,
+    }: {
+      endPoint: string
+      query?: object
+      resolve?: (res) => void
+      reject?: (err) => void
+    }) => {
       const options = removeNullParams({ ...queryObject, ...query })
       const makeUrl = `${baseUrl}/${endPoint}?${joinQueryParam(options)}`
       try {
@@ -103,6 +113,9 @@ export function useApiSlice(query: AnyObject) {
           headers: await credentials.getHeaders(),
         })
         if (response.status) {
+          if (resolve) {
+            resolve(response.data)
+          }
           const { ...restObject } = response.data
           updatePromise((state) => ({
             ...state,
@@ -114,6 +127,9 @@ export function useApiSlice(query: AnyObject) {
           throw new Error(JSON.stringify({ err: response.data }))
         }
       } catch (error) {
+        if (reject) {
+          reject(error)
+        }
         updatePromise((state) => ({
           ...state,
           isLoading: false,
@@ -125,7 +141,17 @@ export function useApiSlice(query: AnyObject) {
   )
 
   const delItems = useCallback(
-    async ({ ids = [], endPoint = '' }: { ids: Array<string | number>; endPoint: string }) => {
+    async ({
+      ids = [],
+      endPoint = '',
+      resolve,
+      reject,
+    }: {
+      ids: Array<string | number>
+      endPoint: string
+      resolve?: (res) => void
+      reject?: (err) => void
+    }) => {
       const makeUrl = `${baseUrl}/${endPoint}/${ids.join(',')}`
       try {
         const response = await axios({
@@ -134,6 +160,9 @@ export function useApiSlice(query: AnyObject) {
           headers: await credentials.getHeaders(),
         })
         if (response.status) {
+          if (resolve) {
+            resolve(response.data)
+          }
           // const { status, ...restObject } = response.data;
           const { data: prevData = [], pagination } = promise.result as {
             data: { [key: string]: unknown; id: string | number }[]
@@ -150,6 +179,10 @@ export function useApiSlice(query: AnyObject) {
           throw new Error(JSON.stringify({ err: response.data }))
         }
       } catch (error) {
+        if (reject) {
+          reject(error)
+        }
+
         updatePromise((state) => ({
           ...state,
           isLoading: false,
@@ -161,7 +194,17 @@ export function useApiSlice(query: AnyObject) {
   )
 
   const postItem = useCallback(
-    async ({ endPoint = '', data = {} }: { endPoint: string; data: unknown }) => {
+    async ({
+      endPoint = '',
+      data = {},
+      reject,
+      resolve,
+    }: {
+      endPoint: string
+      data: unknown
+      resolve?: (res) => void
+      reject?: (err) => void
+    }) => {
       const makeUrl = `${baseUrl}/${endPoint}`
 
       try {
@@ -172,6 +215,10 @@ export function useApiSlice(query: AnyObject) {
           headers: await credentials.getHeaders(),
         })
         if (response.status) {
+          if (resolve) {
+            resolve(resolve)
+          }
+
           // const { status, ...restObject } = response.data;
           const { data: prevData = [], pagination = {} } = promise.result as {
             data: []
@@ -187,6 +234,10 @@ export function useApiSlice(query: AnyObject) {
           throw new Error(JSON.stringify({ err: response.data }))
         }
       } catch (error) {
+        if (reject) {
+          reject(error)
+        }
+
         updatePromise((state) => ({
           ...state,
           isLoading: false,
@@ -201,9 +252,13 @@ export function useApiSlice(query: AnyObject) {
     async ({
       endPoint = '',
       data,
+      reject,
+      resolve,
     }: {
       endPoint: string
       data: { [key: string]: unknown; id: string | number }
+      resolve?: (res) => void
+      reject?: (err) => void
     }) => {
       const makeUrl = `${baseUrl}/${endPoint}`
       try {
@@ -214,7 +269,11 @@ export function useApiSlice(query: AnyObject) {
           headers: await credentials.getHeaders(),
         })
         if (response.status) {
-          // const { status, ...restObject } = response.data;
+          if (resolve) {
+            resolve(response)
+          }
+
+          // .dataconst { status, ...restObject } = response.data;
           const { data: prevData = [], pagination } = promise.result as {
             data: { [key: string]: unknown; id: string | number }[]
             pagination?: object
@@ -231,6 +290,10 @@ export function useApiSlice(query: AnyObject) {
           throw new Error(JSON.stringify({ err: response.data }))
         }
       } catch (error) {
+        if (reject) {
+          reject(error)
+        }
+
         updatePromise((state) => ({
           ...state,
           isLoading: false,

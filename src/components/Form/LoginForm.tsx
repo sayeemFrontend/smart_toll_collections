@@ -10,9 +10,8 @@ import { loginByToken } from '../apis/native_apis'
 import { AnyObject } from '../apis/api_types'
 
 const LoginForm = () => {
-  const handleSubmit = (formValues: AnyObject) => {
-    console.log('Form values', formValues)
-    loginByToken(formValues)
+  const handleSubmit = async (formValues: AnyObject) => {
+    await loginByToken(formValues)
   }
 
   const initialValues = {

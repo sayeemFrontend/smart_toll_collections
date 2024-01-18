@@ -53,7 +53,7 @@ const SignUpForm = () => {
   return (
     <div className="min-w-max lg:w-[400px]">
       {verifyForm ? (
-        <CardBox className="shadow-2xl">
+        <CardBox key="verify_form" className="shadow-2xl">
           <Formik initialValues={{ sms_code: '' }} onSubmit={handleVerification}>
             <Form>
               <FormField label="Enter your Code" help="Please enter your code">

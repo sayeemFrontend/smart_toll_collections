@@ -39,6 +39,7 @@ const menuNavBar: MenuNavBarItem[] = [
     label: 'Log out',
     isDesktopNoLabel: true,
     isLogout: true,
+    href: '/',
   },
 ]
 
