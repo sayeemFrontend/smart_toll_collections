@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import CustomTable from './CustomTable'
-import { AnyObject } from '../apis/api_types'
+import { AnyObject, ApiResPonseType } from '../apis/api_types'
 import CardBoxModal from '../CardBox/Modal'
 import { useApiSlice } from '../../hooks/custom_hooks'
 import Suspender from '../suspender/Suspender'
@@ -9,15 +9,18 @@ import CardBoxComponentEmpty from '../CardBox/Component/Empty'
 import { PaginatedItems } from '../pagination/Paginate'
 import { notify } from '../Notify'
 import FormMaker from '../Form/FormMaker'
+import { getApi } from '../apis/methods'
 
 export default function UsersTable() {
-  const { isError, isLoading, getItems, delItems, updateQuery, result } = useApiSlice({
+  const { isError, isLoading, getItems, postItem, delItems, updateQuery, result } = useApiSlice({
     page: 0,
     per_page: 10,
   })
   const { data = [], pagination } = result as { data: []; pagination: AnyObject }
   const [isModalAdd, setIsModalAdd] = useState<null | AnyObject>(null)
   const [isModalDel, setIsModalDel] = useState<null | AnyObject>(null)
+  const [userTypes, setUserTypes] = useState([])
+  const userTypesOptions = userTypes?.map((op) => ({ label: op.type_name, value: op.id }))
 
   const handleDelete = async () => {
     const item = isModalDel as { id: number | string }
@@ -30,9 +33,30 @@ export default function UsersTable() {
     })
     setIsModalDel(null)
   }
-  const handleCreate = () => {
-    // setIsModalAdd(null)
+  const handleCreate = async (formData) => {
+    await postItem({
+      endPoint: 'admin/user/signup-internal',
+      data: formData,
+      resolve: (res: ApiResPonseType) => {
+        notify({ message: res.message })
+        setIsModalAdd(null)
+      },
+      reject: (res: ApiResPonseType) => {
+        notify({ message: res.message })
+      },
+    })
   }
+
+  const getUserTypes = async () => {
+    await getApi({
+      end_point: 'common-api/user-types',
+      resolve: (res: ApiResPonseType) => setUserTypes(res.data as object[]),
+    })
+  }
+
+  useEffect(() => {
+    getUserTypes()
+  }, [])
 
   useEffect(() => {
     getItems({ endPoint: 'users' })
@@ -58,6 +82,13 @@ export default function UsersTable() {
             { name: 'first_name', Label: 'First Name', helper: 'Enter your first name' },
             { name: 'last_name', Label: 'Last Name', helper: 'Enter your last name' },
             { name: 'mobile_number', Label: 'Mobile Number', helper: 'Enter your mobile number' },
+            { name: 'password', Label: 'Password', helper: 'Enter your password' },
+            {
+              name: 'user_type_id',
+              Label: 'Choose user type',
+              helper: 'type',
+              options: [{ label: 'Choose user type', value: '0' }, ...userTypesOptions],
+            },
           ]}
         />
       </CardBoxModal>
@@ -89,7 +120,6 @@ export default function UsersTable() {
             { key: 'm_last_name', label: 'Last Name' },
             { key: 'mobile_number', label: 'Mobile Number' },
             { key: 'm_user_type', label: 'User Type' },
-            { key: 'created', label: 'Created' },
           ]}
         />
         {!data.length && (

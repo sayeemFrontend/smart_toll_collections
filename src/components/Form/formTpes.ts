@@ -4,4 +4,5 @@ export interface FormFieldType {
   type?: string
   helper?: string
   valueInit?: string
+  options?: { value: string; label: string }[]
 }

@@ -1,5 +1,4 @@
-import { store } from '../stores/store'
-import { logout } from '../stores/userSlice'
+import { credentials } from '../components/apis/credentials'
 
 export function capitalize(str: string) {
   return str.slice(0, 1).toUpperCase() + str.slice(1)
@@ -33,5 +32,5 @@ export function joinQueryParam(obj = {}) {
 }
 
 export function makeLogout() {
-  store.dispatch(logout)
+  credentials.removeTokens()
 }

@@ -3,8 +3,6 @@ import { AnyObject, ApiParamsType } from './api_types'
 import { credentials } from './credentials'
 import { notify } from '../Notify'
 
-export const navigateTo = (name: string) => window.location.replace(name)
-
 const baseUrl = credentials.baseUrl
 
 function debounce(fn: () => Promise<AnyObject>, delay = 200) {

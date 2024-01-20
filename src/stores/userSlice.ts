@@ -1,5 +1,4 @@
 import { createSlice } from '@reduxjs/toolkit'
-import { navigateTo } from '../components/apis/methods'
 
 const userInfoSlice = createSlice({
   name: 'userInfo',
@@ -27,15 +26,9 @@ const userInfoSlice = createSlice({
       state.isError = true
       state.isAuthenticated = false
     },
-    logout: () => {
-      localStorage.clear()
-      sessionStorage.clear()
-      navigateTo('/')
-    },
   },
 })
 
-export const { userInfoFail, userInfoInit, userInfoSuccess, userInfoUpdate, logout } =
-  userInfoSlice.actions
+export const { userInfoFail, userInfoInit, userInfoSuccess, userInfoUpdate } = userInfoSlice.actions
 
 export default userInfoSlice.reducer

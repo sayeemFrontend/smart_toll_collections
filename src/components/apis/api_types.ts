@@ -10,6 +10,11 @@ export interface ApiParamsType {
   responseAlert?: boolean
 }
 
+export interface ApiResPonseType {
+  status?: boolean
+  message?: string
+  data?: unknown
+}
 export interface TokensType {
   token?: string | null
   refreshToken?: string | null

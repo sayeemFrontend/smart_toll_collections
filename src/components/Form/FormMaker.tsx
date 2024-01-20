@@ -14,7 +14,7 @@ interface PropsType {
 }
 
 export default function FormMaker({ formFields, handleFormSubmit, btnLabel = 'add' }: PropsType) {
-  const handleSubmit = (formData) => handleFormSubmit(formData)
+  const handleSubmit = async (formData) => await handleFormSubmit(formData)
 
   const initialValues = {}
   formFields?.forEach((f) => {
@@ -26,15 +26,31 @@ export default function FormMaker({ formFields, handleFormSubmit, btnLabel = 'ad
       <CardBox className="shadow-2xl">
         <Formik initialValues={initialValues} onSubmit={handleSubmit}>
           <Form>
-            {formFields?.map((f_item) => (
-              <FormField
-                key={f_item.name}
-                label={`${f_item.Label || ''}`}
-                help={`${f_item.helper || ''}`}
-              >
-                <Field name={`${f_item.name}`} type={`${f_item.type || 'text'}`} />
-              </FormField>
-            ))}
+            {formFields?.map((f_item) =>
+              f_item.options ? (
+                <FormField
+                  key={f_item.name}
+                  label={`${f_item.Label || ''}`}
+                  help={`${f_item.helper || ''}`}
+                >
+                  <Field as="select" name={`${f_item.name}`}>
+                    {f_item.options?.map((op) => (
+                      <option key={op.label} value={op.value}>
+                        {op.label}
+                      </option>
+                    ))}
+                  </Field>
+                </FormField>
+              ) : (
+                <FormField
+                  key={f_item.name}
+                  label={`${f_item.Label || ''}`}
+                  help={`${f_item.helper || ''}`}
+                >
+                  <Field name={`${f_item.name}`} type={`${f_item.type || 'text'}`} />
+                </FormField>
+              )
+            )}
 
             <Divider />
 

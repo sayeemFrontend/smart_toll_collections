@@ -41,7 +41,7 @@ const LoginForm = () => {
 
             <Buttons>
               <Button type="submit" label="Login" color="info" />
-              <Button href="/dashboard" label="Home" color="info" outline />
+              <Button href="/" label="Home" color="info" outline />
             </Buttons>
           </Form>
         </Formik>

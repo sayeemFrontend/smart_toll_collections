@@ -1,12 +1,14 @@
 // const baseUrl = process.env.NODE_ENV === 'production' ? process.env.REACT_APP_BASE_URL_PROD : process.env.REACT_APP_BASE_URL_DEV;
 
+import Cookies from 'js-cookie'
+
 const baseUrl = 'https://ebs.thinkfoundation.com.bd/api'
 
 async function getTokens() {
   const tokens = { token: null, refreshToken: null }
   try {
-    const t = window.localStorage.getItem('token')
-    const rt = window.localStorage.getItem('refreshToken')
+    const t = Cookies.get('token')
+    const rt = Cookies.get('refreshToken')
     if (t) {
       tokens['token'] = JSON.parse(t)
     }
@@ -22,7 +24,7 @@ async function getTokens() {
 async function setTokens(option = {}) {
   try {
     for (const key in option) {
-      await window.localStorage.setItem(key, JSON.stringify(option[key]))
+      Cookies.set(key, JSON.stringify(option[key]))
     }
   } catch (error) {
     console.log(error)
@@ -31,12 +33,11 @@ async function setTokens(option = {}) {
 
 async function removeTokens() {
   try {
-    window.localStorage.removeItem('token')
-    window.localStorage.removeItem('refreshToken')
-    // NotificationBar({ message: 'Successfully logout' })
-    // await getUserInfo()
+    Cookies.remove('token')
+    Cookies.remove('refreshToken')
   } catch (error) {
     console.log(error)
+    console.log('removes fails')
   }
 }
 
@@ -57,4 +58,18 @@ export const credentials = {
   getTokens,
   setTokens,
   removeTokens,
+}
+
+export function isAuthenticate() {
+  const isAuth = Cookies.get('token')
+  return isAuth
+}
+
+export function getAuthProps() {
+  const isAuth = Cookies.get('token') || false
+  return {
+    props: {
+      isAuth,
+    },
+  }
 }

@@ -7,8 +7,11 @@ import SectionMain from '../components/Section/Main'
 import SectionTitleLineWithButton from '../components/Section/TitleLineWithButton'
 import { getPageTitle } from '../config'
 import UsersTable from '../components/Table/UsersTable'
+import { isAuthenticate } from '../components/apis/credentials'
 
-const UsersPage = () => {
+const UsersPage = (props) => {
+  console.log('up', props)
+
   return (
     <>
       <Head>
@@ -34,3 +37,11 @@ UsersPage.getLayout = function getLayout(page: ReactElement) {
 }
 
 export default UsersPage
+
+export function getStaticProps() {
+  return {
+    props: {
+      isAuth: isAuthenticate() || false,
+    },
+  }
+}
