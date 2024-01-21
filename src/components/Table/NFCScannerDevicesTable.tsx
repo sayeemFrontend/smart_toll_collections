@@ -8,15 +8,21 @@ import CardBox from '../CardBox'
 import CardBoxComponentEmpty from '../CardBox/Component/Empty'
 import { PaginatedItems } from '../pagination/Paginate'
 import { notify } from '../Notify'
+import FormMaker from '../Form/FormMaker'
 
 export default function NFCScannerDevicesTable() {
-  const { isError, isLoading, getItems, delItems, updateQuery, result } = useApiSlice({
+  const { isError, isLoading, getItems, delItems, postItem, updateQuery, result } = useApiSlice({
     page: 0,
     per_page: 10,
   })
   const { data = [], pagination } = result as { data: []; pagination: AnyObject }
   const [isModalAdd, setIsModalAdd] = useState<null | AnyObject>(null)
   const [isModalDel, setIsModalDel] = useState<null | AnyObject>(null)
+
+  const modalClose = () => {
+    setIsModalAdd(null)
+    setIsModalDel(null)
+  }
 
   const handleDeleteItems = async () => {
     const item = isModalDel as { id: number | string }
@@ -30,8 +36,15 @@ export default function NFCScannerDevicesTable() {
     setIsModalDel(null)
   }
 
-  const handleAddItems = () => {
-    setIsModalAdd(null)
+  const handleFormData = async (formData) => {
+    await postItem({
+      endPoint: 'nfc-scanner-device/create',
+      data: formData,
+      reject: (error) => {
+        console.log(error)
+        notify({ message: error.response.data.error })
+      },
+    })
   }
 
   useEffect(() => {
@@ -41,17 +54,21 @@ export default function NFCScannerDevicesTable() {
   return (
     <>
       <CardBoxModal
-        title="Sample modal"
+        title="Add New Balance"
         buttonColor="info"
         buttonLabel="Done"
         isActive={!!isModalAdd}
-        onConfirm={handleAddItems}
-        onCancel={() => setIsModalDel(null)}
+        onCancel={modalClose}
+        actionBar={false}
       >
-        <p>
-          Lorem ipsum dolor sit amet <b>adipiscing elit</b>
-        </p>
-        <p>This is sample modal</p>
+        <FormMaker
+          btnLabel="Add"
+          handleFormSubmit={handleFormData}
+          formFields={[
+            { name: 'name', Label: 'Name' },
+            { name: 'model_name', Label: 'Model Name' },
+          ]}
+        />
       </CardBoxModal>
 
       <CardBoxModal
@@ -62,15 +79,13 @@ export default function NFCScannerDevicesTable() {
         onConfirm={handleDeleteItems}
         onCancel={() => setIsModalDel(null)}
       >
-        <p>
-          Lorem ipsum dolor sit amet <b>adipiscing elit</b>
-        </p>
-        <p>This is sample modal</p>
+        <p>You are going to remove from data list </p>
+        <p>Confirm if you are sure</p>
       </CardBoxModal>
       <Suspender isLoading={isLoading} isError={isError}>
         <CustomTable
           actions={{
-            add: (item) => setIsModalAdd(item),
+            add: () => setIsModalAdd({}),
             del: (item) => setIsModalDel(item),
           }}
           dataList={data}

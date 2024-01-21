@@ -220,16 +220,18 @@ export function useApiSlice(query: AnyObject) {
           }
 
           // const { status, ...restObject } = response.data;
-          const { data: prevData = [], pagination = {} } = promise.result as {
-            data: []
-            pagination: object
-          }
-          updatePromise((state) => ({
-            ...state,
-            isLoading: false,
-            isError: false,
-            result: { data: [...prevData, data], pagination },
-          }))
+          // temp commented
+          // const { data: prevData = [], pagination = {} } = promise.result as {
+          //   data: []
+          //   pagination: object
+          // }
+          // updatePromise((state) => ({
+          //   ...state,
+          //   isLoading: false,
+          //   isError: false,
+          //   result: { data: [...prevData, data], pagination },
+          // }))
+          window.location.reload()
         } else {
           throw new Error(JSON.stringify({ err: response.data }))
         }

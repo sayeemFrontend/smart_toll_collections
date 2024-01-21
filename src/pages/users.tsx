@@ -9,9 +9,7 @@ import { getPageTitle } from '../config'
 import UsersTable from '../components/Table/UsersTable'
 import { isAuthenticate } from '../components/apis/credentials'
 
-const UsersPage = (props) => {
-  console.log('up', props)
-
+const UsersPage = () => {
   return (
     <>
       <Head>

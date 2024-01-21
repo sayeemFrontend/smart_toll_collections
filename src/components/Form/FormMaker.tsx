@@ -6,19 +6,27 @@ import FormField from './Field'
 import Divider from '../Divider'
 import Buttons from '../Buttons'
 import Button from '../Button'
+import { AnyObject } from '../apis/api_types'
 
 interface PropsType {
   formFields: FormFieldType[]
   handleFormSubmit: (formValues) => void
   btnLabel?: string
+  prevData?: AnyObject | null
 }
 
-export default function FormMaker({ formFields, handleFormSubmit, btnLabel = 'add' }: PropsType) {
+export default function FormMaker({
+  prevData,
+  formFields,
+  handleFormSubmit,
+  btnLabel = 'add',
+}: PropsType) {
   const handleSubmit = async (formData) => await handleFormSubmit(formData)
 
   const initialValues = {}
   formFields?.forEach((f) => {
-    initialValues[f.name] = f.valueInit || ''
+    const { name } = f
+    initialValues[name] = prevData && prevData[name] ? prevData[name] : ''
   })
 
   return (
@@ -26,16 +34,16 @@ export default function FormMaker({ formFields, handleFormSubmit, btnLabel = 'ad
       <CardBox className="shadow-2xl">
         <Formik initialValues={initialValues} onSubmit={handleSubmit}>
           <Form>
-            {formFields?.map((f_item) =>
+            {formFields?.map((f_item, i) =>
               f_item.options ? (
                 <FormField
-                  key={f_item.name}
+                  key={`${f_item.name + i}`}
                   label={`${f_item.Label || ''}`}
                   help={`${f_item.helper || ''}`}
                 >
                   <Field as="select" name={`${f_item.name}`}>
-                    {f_item.options?.map((op) => (
-                      <option key={op.label} value={op.value}>
+                    {f_item.options?.map((op, i) => (
+                      <option key={`${op.label + i}`} value={op.value}>
                         {op.label}
                       </option>
                     ))}

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import CustomTable from './CustomTable'
-import { AnyObject } from '../apis/api_types'
+import { AnyObject, MultiApiResponse } from '../apis/api_types'
 import CardBoxModal from '../CardBox/Modal'
 import { useApiSlice } from '../../hooks/custom_hooks'
 import Suspender from '../suspender/Suspender'
@@ -8,15 +8,24 @@ import CardBox from '../CardBox'
 import CardBoxComponentEmpty from '../CardBox/Component/Empty'
 import { PaginatedItems } from '../pagination/Paginate'
 import { notify } from '../Notify'
+import { getMultipleApi } from '../apis/methods'
+import FormMaker from '../Form/FormMaker'
 
 export default function TransactionLogsTable() {
-  const { isError, isLoading, getItems, delItems, updateQuery, result } = useApiSlice({
+  const { isError, isLoading, getItems, delItems, postItem, updateQuery, result } = useApiSlice({
     page: 0,
     per_page: 10,
   })
   const { data = [], pagination } = result as { data: []; pagination: AnyObject }
   const [isModalAdd, setIsModalAdd] = useState<null | AnyObject>(null)
   const [isModalDel, setIsModalDel] = useState<null | AnyObject>(null)
+  const [nfcCards, setNfcCards] = useState([])
+  const [operators, setOperators] = useState([])
+
+  const modalClose = () => {
+    setIsModalAdd(null)
+    setIsModalDel(null)
+  }
 
   const handleDeleteItems = async () => {
     const item = isModalDel as { id: number | string }
@@ -30,9 +39,48 @@ export default function TransactionLogsTable() {
     setIsModalDel(null)
   }
 
-  const handleAddItems = () => {
-    setIsModalAdd(null)
+  const handleFormData = async (formData) => {
+    await postItem({
+      endPoint: 'transaction-log/add',
+      data: formData,
+      reject: (error) => {
+        console.log(error)
+        notify({ message: error.response.data.error })
+      },
+    })
   }
+
+  const getOptionsData = async () => {
+    await getMultipleApi({
+      end_points: ['users?user_type_id=3', 'nfc-card/all'],
+      resolve: ([operators, nfc]: MultiApiResponse) => {
+        if (operators.status) {
+          const data = operators.data as AnyObject[]
+          setOperators(
+            () =>
+              data?.map((op) => ({
+                label: `${op.first_name} ${op.last_name}`,
+                value: op.id,
+              }))
+          )
+        }
+        if (nfc.status) {
+          const data = nfc.data as AnyObject[]
+          setNfcCards(
+            () =>
+              data?.map((op) => ({
+                label: `${op.nfc_card_no} (${op.id})`,
+                value: op.nfc_card_no,
+              }))
+          )
+        }
+      },
+    })
+  }
+
+  useEffect(() => {
+    getOptionsData()
+  }, [])
 
   useEffect(() => {
     getItems({ endPoint: 'transaction-log/all' })
@@ -46,17 +94,29 @@ export default function TransactionLogsTable() {
   return (
     <>
       <CardBoxModal
-        title="Sample modal"
+        title="Add New "
         buttonColor="info"
         buttonLabel="Done"
         isActive={!!isModalAdd}
-        onConfirm={handleAddItems}
-        onCancel={() => setIsModalAdd(null)}
+        onCancel={modalClose}
+        actionBar={false}
       >
-        <p>
-          Lorem ipsum dolor sit amet <b>adipiscing elit</b>
-        </p>
-        <p>This is sample modal</p>
+        <FormMaker
+          btnLabel="Add"
+          handleFormSubmit={handleFormData}
+          formFields={[
+            {
+              name: 'operator_id',
+              Label: 'Choose operator',
+              options: [{ label: 'Choose user type', value: '0' }, ...operators],
+            },
+            {
+              name: 'nfc_card_no',
+              Label: 'Choose nfc card',
+              options: [{ label: 'Choose user type', value: '0' }, ...nfcCards],
+            },
+          ]}
+        />
       </CardBoxModal>
 
       <CardBoxModal
@@ -67,15 +127,13 @@ export default function TransactionLogsTable() {
         onConfirm={handleDeleteItems}
         onCancel={() => setIsModalDel(null)}
       >
-        <p>
-          Lorem ipsum dolor sit amet <b>adipiscing elit</b>
-        </p>
-        <p>This is sample modal</p>
+        <p>You are going to remove from data list </p>
+        <p>Confirm if you are sure</p>
       </CardBoxModal>
       <Suspender isLoading={isLoading} isError={isError}>
         <CustomTable
           actions={{
-            add: (item) => setIsModalAdd(item),
+            add: () => setIsModalAdd({}),
             del: (item) => setIsModalDel(item),
           }}
           dataList={data?.map((it: AnyObject) => ({

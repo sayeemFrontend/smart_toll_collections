@@ -15,19 +15,21 @@ export default function LandingPage() {
   return (
     <>
       <Head>
-        <title>Nextly - Free Nextjs & TailwindCSS Landing Page Template</title>
+        <title>Toll Management </title>
         <meta
           name="description"
-          content="Nextly is a free landing page template built with next.js & Tailwind CSS"
+          content="Toll management systems play a crucial role in modern transportation infrastructure, serving as a mechanism to finance the construction, maintenance, and improvement of roads, bridges, and tunnels. "
         />
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
       <Navbar />
       <Hero />
-      <SectionTitle pretitle="Nextly Benefits" title=" Why should you use this landing page">
-        Nextly is a free landing page & marketing website template for startups and indie projects.
-        Its built with Next.js & TailwindCSS. And its completely open-source.
+      <SectionTitle pretitle="Toll Benefits" title=" Why should you use this solutions">
+        This System contribute to the upkeep of transportation facilities, ensuring safer and more
+        efficient travel experiences for commuters. The systems have evolved over time, with
+        technology advancements enabling electronic tolling methods that enhance convenience and
+        reduce traffic congestion.
       </SectionTitle>
       <Benefits data={benefitOne} />
       {/* <Benefits imgPos="right" data={benefitTwo} /> */}

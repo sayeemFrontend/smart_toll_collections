@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { AnyObject, ApiParamsType } from './api_types'
+import { AnyObject, ApiParamsType, MultipleApiParamsType } from './api_types'
 import { credentials } from './credentials'
 import { notify } from '../Notify'
 
@@ -134,5 +134,24 @@ export async function postApi({
     }
     if (reject) reject(result)
     handleError(error, { end_point, body, resolve, reject })
+  }
+}
+
+export async function getMultipleApi({ end_points = [], resolve, reject }: MultipleApiParamsType) {
+  try {
+    Promise.all(
+      end_points?.map(async (end_point) =>
+        axios.get(`${baseUrl}/${end_point}`, { headers: await credentials.getHeaders() })
+      )
+    )
+      .then((response) => {
+        const results = response?.map((res) => res.data)
+        resolve(results)
+      })
+      .catch((error) => {
+        if (reject) reject(error)
+      })
+  } catch (error) {
+    if (reject) reject(error)
   }
 }

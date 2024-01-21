@@ -22,6 +22,10 @@ export default function UsersTable() {
   const [userTypes, setUserTypes] = useState([])
   const userTypesOptions = userTypes?.map((op) => ({ label: op.type_name, value: op.id }))
 
+  const modalClose = () => {
+    setIsModalAdd(null)
+    setIsModalDel(null)
+  }
   const handleDelete = async () => {
     const item = isModalDel as { id: number | string }
     await delItems({
@@ -33,16 +37,13 @@ export default function UsersTable() {
     })
     setIsModalDel(null)
   }
-  const handleCreate = async (formData) => {
+  const handleFormData = async (formData) => {
     await postItem({
       endPoint: 'admin/user/signup-internal',
       data: formData,
-      resolve: (res: ApiResPonseType) => {
-        notify({ message: res.message })
-        setIsModalAdd(null)
-      },
-      reject: (res: ApiResPonseType) => {
-        notify({ message: res.message })
+      reject: (error) => {
+        console.log(error)
+        notify({ message: error.response.data.error })
       },
     })
   }
@@ -69,15 +70,16 @@ export default function UsersTable() {
   return (
     <>
       <CardBoxModal
-        title="Sample modal"
+        title="Add New User"
         buttonColor="info"
         buttonLabel="Done"
         isActive={!!isModalAdd}
-        onCancel={() => setIsModalAdd(null)}
+        onCancel={modalClose}
         actionBar={false}
       >
         <FormMaker
-          handleFormSubmit={handleCreate}
+          btnLabel="Add"
+          handleFormSubmit={handleFormData}
           formFields={[
             { name: 'first_name', Label: 'First Name', helper: 'Enter your first name' },
             { name: 'last_name', Label: 'Last Name', helper: 'Enter your last name' },
@@ -99,7 +101,7 @@ export default function UsersTable() {
         buttonLabel="Confirm"
         isActive={!!isModalDel}
         onConfirm={handleDelete}
-        onCancel={() => setIsModalDel(null)}
+        onCancel={modalClose}
       >
         <p>User are going to remove from data list </p>
         <p>Confirm if you are sure</p>
@@ -107,7 +109,7 @@ export default function UsersTable() {
       <Suspender isLoading={isLoading} isError={isError}>
         <CustomTable
           actions={{
-            add: (item) => setIsModalAdd(item),
+            add: () => setIsModalAdd({}),
             del: (item) => setIsModalDel(item),
           }}
           dataList={data?.map((it: AnyObject) => ({

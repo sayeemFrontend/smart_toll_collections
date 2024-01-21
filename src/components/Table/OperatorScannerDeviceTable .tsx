@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import CustomTable from './CustomTable'
-import { AnyObject } from '../apis/api_types'
+import { AnyObject, MultiApiResponse } from '../apis/api_types'
 import CardBoxModal from '../CardBox/Modal'
 import { useApiSlice } from '../../hooks/custom_hooks'
 import Suspender from '../suspender/Suspender'
@@ -8,16 +8,24 @@ import CardBox from '../CardBox'
 import CardBoxComponentEmpty from '../CardBox/Component/Empty'
 import { PaginatedItems } from '../pagination/Paginate'
 import { notify } from '../Notify'
+import FormMaker from '../Form/FormMaker'
+import { getMultipleApi } from '../apis/methods'
 
 export default function OperatorScannerDeviceTable() {
-  const { isError, isLoading, getItems, delItems, updateQuery, result } = useApiSlice({
+  const { isError, isLoading, getItems, delItems, postItem, updateQuery, result } = useApiSlice({
     page: 0,
     per_page: 10,
   })
   const { data = [], pagination } = result as { data: []; pagination: AnyObject }
   const [isModalAdd, setIsModalAdd] = useState<null | AnyObject>(null)
   const [isModalDel, setIsModalDel] = useState<null | AnyObject>(null)
+  const [nfcSDevices, setNfcSDevices] = useState([])
+  const [operators, setOperators] = useState([])
 
+  const modalClose = () => {
+    setIsModalAdd(null)
+    setIsModalDel(null)
+  }
   const handleDeleteItems = async () => {
     const item = isModalDel as { id: number | string }
     await delItems({
@@ -30,9 +38,48 @@ export default function OperatorScannerDeviceTable() {
     setIsModalDel(null)
   }
 
-  const handleAddItems = () => {
-    setIsModalAdd(null)
+  const handleFormData = async (formData) => {
+    await postItem({
+      endPoint: 'operator-scanner-device/create',
+      data: formData,
+      reject: (error) => {
+        console.log(error)
+        notify({ message: error.response.data.error })
+      },
+    })
   }
+
+  const getOptionsData = async () => {
+    await getMultipleApi({
+      end_points: ['users?user_type_id=3', 'nfc-scanner-device/all'],
+      resolve: ([operators, nfcs]: MultiApiResponse) => {
+        if (operators.status) {
+          const data = operators.data as AnyObject[]
+          setOperators(
+            () =>
+              data?.map((op) => ({
+                label: `${op.first_name} ${op.last_name}`,
+                value: op.id,
+              }))
+          )
+        }
+        if (nfcs.status) {
+          const data = nfcs.data as AnyObject[]
+          setNfcSDevices(
+            () =>
+              data?.map((op) => ({
+                label: `${op.name}`,
+                value: op.id,
+              }))
+          )
+        }
+      },
+    })
+  }
+
+  useEffect(() => {
+    getOptionsData()
+  }, [])
 
   useEffect(() => {
     getItems({ endPoint: 'operator-scanner-device/all' })
@@ -47,6 +94,7 @@ export default function OperatorScannerDeviceTable() {
     const { name } = user
     return name
   }, [])
+
   const getModelName = React.useCallback((user: AnyObject) => {
     const { model_name } = user
     return model_name
@@ -55,17 +103,29 @@ export default function OperatorScannerDeviceTable() {
   return (
     <>
       <CardBoxModal
-        title="Sample modal"
+        title="Add New "
         buttonColor="info"
         buttonLabel="Done"
         isActive={!!isModalAdd}
-        onConfirm={handleAddItems}
-        onCancel={() => setIsModalAdd(null)}
+        onCancel={modalClose}
+        actionBar={false}
       >
-        <p>
-          Lorem ipsum dolor sit amet <b>adipiscing elit</b>
-        </p>
-        <p>This is sample modal</p>
+        <FormMaker
+          btnLabel="Add"
+          handleFormSubmit={handleFormData}
+          formFields={[
+            {
+              name: 'operator_id',
+              Label: 'Choose operator',
+              options: [{ label: 'Choose user type', value: '0' }, ...operators],
+            },
+            {
+              name: 'nfc_scanner_device_id',
+              Label: 'Choose NFC scanner device',
+              options: [{ label: 'Choose user type', value: '0' }, ...nfcSDevices],
+            },
+          ]}
+        />
       </CardBoxModal>
 
       <CardBoxModal
@@ -76,15 +136,13 @@ export default function OperatorScannerDeviceTable() {
         onConfirm={handleDeleteItems}
         onCancel={() => setIsModalDel(null)}
       >
-        <p>
-          Lorem ipsum dolor sit amet <b>adipiscing elit</b>
-        </p>
-        <p>This is sample modal</p>
+        <p>You are going to remove from data list </p>
+        <p>Confirm if you are sure</p>
       </CardBoxModal>
       <Suspender isLoading={isLoading} isError={isError}>
         <CustomTable
           actions={{
-            add: (item) => setIsModalAdd(item),
+            add: () => setIsModalAdd({}),
             del: (item) => setIsModalDel(item),
           }}
           dataList={data?.map((it: AnyObject) => ({

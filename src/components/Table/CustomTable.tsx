@@ -1,8 +1,7 @@
-import { mdiEye, mdiTrashCan } from '@mdi/js'
-import React, { useState } from 'react'
+import { mdiEye, mdiEyePlusOutline, mdiTrashCan } from '@mdi/js'
+import React from 'react'
 import Button from '../Button'
 import Buttons from '../Buttons'
-import CardBoxModal from '../CardBox/Modal'
 import { AnyObject } from '../apis/api_types'
 
 export type HeaderType = {
@@ -24,7 +23,7 @@ type PropsType = {
     bgBody?: string
   }
   actions?: {
-    add?: (item: AnyObject) => void
+    add?: () => void
     edit?: (item: AnyObject) => void
     del?: (item: AnyObject) => void
   }
@@ -34,44 +33,13 @@ export default function CustomTable({ headers, dataList = [], actions }: PropsTy
   const heads = headers?.map((header) => header.label)
   const keys = headers?.map((header) => header.key)
 
-  const [isModalInfoActive, setIsModalInfoActive] = useState(false)
-  const [isModalTrashActive, setIsModalTrashActive] = useState(false)
-
-  const handleModalAction = () => {
-    setIsModalInfoActive(false)
-    setIsModalTrashActive(false)
-  }
-
   return (
-    <>
-      <CardBoxModal
-        title="Sample modal"
-        buttonColor="info"
-        buttonLabel="Done"
-        isActive={isModalInfoActive}
-        onConfirm={handleModalAction}
-        onCancel={handleModalAction}
-      >
-        <p>
-          Lorem ipsum dolor sit amet <b>adipiscing elit</b>
-        </p>
-        <p>This is sample modal</p>
-      </CardBoxModal>
-
-      <CardBoxModal
-        title="Please confirm"
-        buttonColor="danger"
-        buttonLabel="Confirm"
-        isActive={isModalTrashActive}
-        onConfirm={handleModalAction}
-        onCancel={handleModalAction}
-      >
-        <p>
-          Lorem ipsum dolor sit amet <b>adipiscing elit</b>
-        </p>
-        <p>This is sample modal</p>
-      </CardBoxModal>
-
+    <div className="relative">
+      {actions.add && (
+        <div className=" w-fit ml-auto absolute right-4 -top-10">
+          <Button color="info" icon={mdiEyePlusOutline} onClick={actions.add} small />
+        </div>
+      )}
       <table>
         <thead>
           <tr>{heads?.map((thead) => <th key={thead}>{thead}</th>)}</tr>
@@ -82,16 +50,20 @@ export default function CustomTable({ headers, dataList = [], actions }: PropsTy
               {keys?.map((keyValue, i) => (
                 <td key={i} data-label={keyValue}>{`${item[keyValue] || '-'}`}</td>
               ))}
-              {actions?.add && (
+              {actions && (
                 <td className="before:hidden lg:w-1 whitespace-nowrap">
                   <Buttons type="justify-start lg:justify-end" noWrap>
-                    <Button color="info" icon={mdiEye} onClick={() => actions.add(item)} small />
-                    <Button
-                      color="danger"
-                      icon={mdiTrashCan}
-                      onClick={() => actions.del(item)}
-                      small
-                    />
+                    {actions.edit && (
+                      <Button color="info" icon={mdiEye} onClick={() => actions.edit(item)} small />
+                    )}
+                    {actions.del && (
+                      <Button
+                        color="danger"
+                        icon={mdiTrashCan}
+                        onClick={() => actions.del(item)}
+                        small
+                      />
+                    )}
                   </Buttons>
                 </td>
               )}
@@ -99,6 +71,6 @@ export default function CustomTable({ headers, dataList = [], actions }: PropsTy
           ))}
         </tbody>
       </table>
-    </>
+    </div>
   )
 }

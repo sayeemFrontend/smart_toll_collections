@@ -15,7 +15,6 @@ export default function BalanceRefillLogsTable() {
     per_page: 10,
   })
   const { data = [], pagination } = result as { data: []; pagination: AnyObject }
-  const [isModalAdd, setIsModalAdd] = useState<null | AnyObject>(null)
   const [isModalDel, setIsModalDel] = useState<null | AnyObject>(null)
 
   const handleDeleteItems = async () => {
@@ -30,10 +29,6 @@ export default function BalanceRefillLogsTable() {
     setIsModalDel(null)
   }
 
-  const handleAddItems = () => {
-    setIsModalAdd(null)
-  }
-
   useEffect(() => {
     getItems({ endPoint: 'account-balance-refill-log/all' })
   }, [getItems])
@@ -45,20 +40,6 @@ export default function BalanceRefillLogsTable() {
 
   return (
     <>
-      <CardBoxModal
-        title="Sample modal"
-        buttonColor="info"
-        buttonLabel="Done"
-        isActive={!!isModalAdd}
-        onConfirm={handleAddItems}
-        onCancel={() => setIsModalAdd(null)}
-      >
-        <p>
-          Lorem ipsum dolor sit amet <b>adipiscing elit</b>
-        </p>
-        <p>This is sample modal</p>
-      </CardBoxModal>
-
       <CardBoxModal
         title="Please confirm"
         buttonColor="danger"
@@ -73,7 +54,6 @@ export default function BalanceRefillLogsTable() {
       <Suspender isLoading={isLoading} isError={isError}>
         <CustomTable
           actions={{
-            add: (item) => setIsModalAdd(item),
             del: (item) => setIsModalDel(item),
           }}
           dataList={data?.map((it: AnyObject) => ({

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import CustomTable from './CustomTable'
-import { AnyObject } from '../apis/api_types'
+import { AnyObject, MultiApiResponse } from '../apis/api_types'
 import CardBoxModal from '../CardBox/Modal'
 import { useApiSlice } from '../../hooks/custom_hooks'
 import Suspender from '../suspender/Suspender'
@@ -8,15 +8,54 @@ import CardBox from '../CardBox'
 import CardBoxComponentEmpty from '../CardBox/Component/Empty'
 import { PaginatedItems } from '../pagination/Paginate'
 import { notify } from '../Notify'
+import FormMaker from '../Form/FormMaker'
+import { getMultipleApi } from '../apis/methods'
 
 export default function UserVehicleTable() {
-  const { isError, isLoading, getItems, delItems, updateQuery, result } = useApiSlice({
+  const { isError, isLoading, getItems, delItems, postItem, updateQuery, result } = useApiSlice({
     page: 0,
     per_page: 10,
   })
   const { data = [], pagination } = result as { data: []; pagination: AnyObject }
   const [isModalAdd, setIsModalAdd] = useState<null | AnyObject>(null)
   const [isModalDel, setIsModalDel] = useState<null | AnyObject>(null)
+  const [isModalUpdate, setIsModalUpdate] = useState<null | AnyObject>(null)
+  const [vehicleTypesOptions, setVehicleTypesOptions] = useState([])
+  const [userOptions, setUserOptions] = useState([])
+  const [nfcCardsOptions, setNfcCardsOptions] = useState([])
+
+  const modalClose = () => {
+    setIsModalAdd(null)
+    setIsModalDel(null)
+    setIsModalUpdate(null)
+  }
+
+  const getOptionsData = async () => {
+    await getMultipleApi({
+      end_points: ['users', 'nfc-card/all', 'common-api/vehicle-types'],
+      resolve: ([users, nfcs, vehicles]: MultiApiResponse) => {
+        if (users.status) {
+          const data = users.data as AnyObject[]
+          setUserOptions(
+            () => data?.map((op) => ({ label: `${op.first_name} ${op.last_name}`, value: op.id }))
+          )
+        }
+        if (nfcs.status) {
+          const data = nfcs.data as AnyObject[]
+          setNfcCardsOptions(
+            () =>
+              data?.map((op) => ({ label: `${op.nfc_card_no} (${op.id})`, value: op.nfc_card_no }))
+          )
+        }
+        if (vehicles.status) {
+          const data = vehicles.data as AnyObject[]
+          setVehicleTypesOptions(
+            () => data?.map((op) => ({ label: `${op.type_name}`, value: op.id }))
+          )
+        }
+      },
+    })
+  }
 
   const handleDeleteItems = async () => {
     const item = isModalDel as { id: number | string }
@@ -30,9 +69,31 @@ export default function UserVehicleTable() {
     setIsModalDel(null)
   }
 
-  const handleAddItems = () => {
-    setIsModalAdd(null)
+  const handleFormData = async (formData) => {
+    if (isModalUpdate) {
+      await postItem({
+        endPoint: 'user-vehicle/update',
+        data: { ...formData, ...isModalUpdate },
+        reject: (error) => {
+          console.log(error)
+          notify({ message: error.response.data.error })
+        },
+      })
+    } else {
+      await postItem({
+        endPoint: 'user-vehicle/create',
+        data: formData,
+        reject: (error) => {
+          console.log(error)
+          notify({ message: error.response.data.error })
+        },
+      })
+    }
   }
+
+  useEffect(() => {
+    getOptionsData()
+  }, [])
 
   useEffect(() => {
     getItems({ endPoint: 'user-vehicle/all' })
@@ -51,21 +112,41 @@ export default function UserVehicleTable() {
     const { mobile_number } = user
     return mobile_number
   }, [])
+  console.log(isModalUpdate)
 
   return (
     <>
       <CardBoxModal
-        title="Sample modal"
+        title={`${isModalUpdate ? 'Update User Vehicle' : 'Add New '}`}
         buttonColor="info"
         buttonLabel="Done"
-        isActive={!!isModalAdd}
-        onConfirm={handleAddItems}
-        onCancel={() => setIsModalAdd(null)}
+        isActive={!!isModalAdd || !!isModalUpdate}
+        onCancel={modalClose}
+        actionBar={false}
       >
-        <p>
-          Lorem ipsum dolor sit amet <b>adipiscing elit</b>
-        </p>
-        <p>This is sample modal</p>
+        <FormMaker
+          prevData={isModalUpdate}
+          btnLabel={`${isModalUpdate ? 'Update' : 'Add'}`}
+          handleFormSubmit={handleFormData}
+          formFields={[
+            { name: 'reg_no', Label: 'Reg No', helper: 'Enter your reg. no' },
+            {
+              name: 'user_id',
+              Label: 'User',
+              options: [{ label: 'Choose', value: 'null' }, ...userOptions],
+            },
+            {
+              name: 'nfc_card_no',
+              Label: 'NFC CARD',
+              options: [{ label: 'Choose', value: 'null' }, ...nfcCardsOptions],
+            },
+            {
+              name: 'vehicle_type_id',
+              Label: 'Vehicle type',
+              options: [{ label: 'Choose', value: 'null' }, ...vehicleTypesOptions],
+            },
+          ]}
+        />
       </CardBoxModal>
 
       <CardBoxModal
@@ -76,16 +157,15 @@ export default function UserVehicleTable() {
         onConfirm={handleDeleteItems}
         onCancel={() => setIsModalDel(null)}
       >
-        <p>
-          Lorem ipsum dolor sit amet <b>adipiscing elit</b>
-        </p>
-        <p>This is sample modal</p>
+        <p>You are going to remove from data list </p>
+        <p>Confirm if you are sure</p>
       </CardBoxModal>
       <Suspender isLoading={isLoading} isError={isError}>
         <CustomTable
           actions={{
-            add: (item) => setIsModalAdd(item),
+            add: () => setIsModalAdd({}),
             del: (item) => setIsModalDel(item),
+            edit: (item) => setIsModalUpdate(item),
           }}
           dataList={data?.map((it: AnyObject) => ({
             ...it,
