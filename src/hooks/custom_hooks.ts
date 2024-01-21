@@ -247,7 +247,7 @@ export function useApiSlice(query: AnyObject) {
         }))
       }
     },
-    [promise, baseUrl]
+    [baseUrl]
   )
 
   const updateItem = useCallback(
