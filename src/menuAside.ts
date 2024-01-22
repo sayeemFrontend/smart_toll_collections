@@ -1,7 +1,6 @@
 import {
   mdiAccountCircle,
   mdiMonitor,
-  mdiAlertCircle,
   mdiSquareEditOutline,
   mdiTable,
   mdiTelevisionGuide,
@@ -57,11 +56,7 @@ const menuAside: MenuAsideItem[] = [
     label: 'Transaction Logs',
     icon: mdiSquareEditOutline,
   },
-  {
-    href: '/error',
-    label: 'Error',
-    icon: mdiAlertCircle,
-  },
+
   // {
   //   label: 'Dropdown',
   //   icon: mdiViewList,

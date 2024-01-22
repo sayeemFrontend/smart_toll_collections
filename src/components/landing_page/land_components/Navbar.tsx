@@ -1,8 +1,6 @@
 import Link from 'next/link'
 import ThemeChanger from './ThemeChanger'
-import Image from 'next/image'
 import { Disclosure } from '@headlessui/react'
-import logo from '../land_components/img/logo.svg'
 import CustomPopup from './CustomPopup'
 import LoginForm from '../../Form/LoginForm'
 import SignUpForm from '../../Form/SignUpForm'
@@ -19,10 +17,11 @@ const Navbar = () => {
               <div className="flex flex-wrap items-center justify-between w-full lg:w-auto">
                 <Link href="/">
                   <span className="flex items-center space-x-2 text-2xl font-medium text-indigo-500 dark:text-gray-100">
-                    <span>
-                      <Image src={logo} alt="N" width="32" height="32" className="w-8" />
+                    <span className="px-2 bg-indigo-600 rounded">
+                      <p className="text-white font-extrabold">T</p>
+                      {/* <Image src="" alt="T" width="36" height="36" className="w-8" /> */}
                     </span>
-                    <span>THiNK Toll</span>
+                    <span>THiNK ToLL</span>
                   </span>
                 </Link>
 

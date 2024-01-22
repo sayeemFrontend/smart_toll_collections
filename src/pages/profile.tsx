@@ -1,11 +1,4 @@
-import {
-  mdiAccount,
-  mdiAsterisk,
-  mdiFormTextboxPassword,
-  mdiGithub,
-  mdiMail,
-  mdiUpload,
-} from '@mdi/js'
+import { mdiAccount, mdiAsterisk, mdiFormTextboxPassword, mdiMail, mdiUpload } from '@mdi/js'
 import { Formik, Form, Field } from 'formik'
 import Head from 'next/head'
 import type { ReactElement } from 'react'
@@ -41,17 +34,11 @@ const ProfilePage = () => {
       </Head>
 
       <SectionMain>
-        <SectionTitleLineWithButton icon={mdiAccount} title="Profile" main>
-          <Button
-            href="https://github.com/justboil/admin-one-react-tailwind"
-            target="_blank"
-            icon={mdiGithub}
-            label="Star on GitHub"
-            color="contrast"
-            roundedFull
-            small
-          />
-        </SectionTitleLineWithButton>
+        <SectionTitleLineWithButton
+          icon={mdiAccount}
+          title="Profile"
+          main
+        ></SectionTitleLineWithButton>
 
         <CardBoxUser className="mb-6" />
 

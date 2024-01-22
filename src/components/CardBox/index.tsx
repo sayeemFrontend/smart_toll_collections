@@ -32,7 +32,7 @@ export default function CardBox({
     className,
     rounded,
     flex,
-    isModal ? 'dark:bg-slate-900' : 'dark:bg-slate-900/70',
+    isModal ? 'dark:bg-slate-900' : 'dark:bg-slate-900',
   ]
 
   if (isHoverable) {

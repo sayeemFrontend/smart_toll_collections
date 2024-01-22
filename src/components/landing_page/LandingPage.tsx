@@ -1,4 +1,3 @@
-import Head from 'next/head'
 import Hero from './land_components/Hero'
 import SectionTitle from './land_components/SectionTitle'
 import Video from './land_components/Video'
@@ -14,15 +13,6 @@ import { benefitOne } from './land_components/data'
 export default function LandingPage() {
   return (
     <>
-      <Head>
-        <title>Toll Management </title>
-        <meta
-          name="description"
-          content="Toll management systems play a crucial role in modern transportation infrastructure, serving as a mechanism to finance the construction, maintenance, and improvement of roads, bridges, and tunnels. "
-        />
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
-
       <Navbar />
       <Hero />
       <SectionTitle pretitle="Toll Benefits" title=" Why should you use this solutions">
@@ -39,14 +29,13 @@ export default function LandingPage() {
         this.
       </SectionTitle>
       <Video />
-      <SectionTitle pretitle="Testimonials" title="Here's what our customers said">
-        Testimonails is a great way to increase the brand trust and awareness. Use this section to
-        highlight your popular customers.
+      <SectionTitle pretitle="Testimonials" title="what our customers said">
+        We live with the brand trust and awareness. Some of our users comments, we appreciate any
+        feedback..
       </SectionTitle>
       <Testimonials />
       <SectionTitle pretitle="FAQ" title="Frequently Asked Questions">
-        Answer your customers possible questions here, it will increase the conversion rate as well
-        as support or chat requests.
+        Answer the customers questions frequently asked, feel free with questions we will back soon.
       </SectionTitle>
       <Faq />
       <Cta />
