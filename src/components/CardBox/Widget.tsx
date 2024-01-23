@@ -22,7 +22,7 @@ type Props = {
 
 const CardBoxWidget = (props: Props) => {
   return (
-    <CardBox>
+    <CardBox className="px-6 py-8">
       {props.trendLabel && props.trendType && props.trendColor && (
         <div className="flex items-center justify-between mb-3">
           <PillTagTrend

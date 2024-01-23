@@ -1,3 +1,4 @@
+'use client'
 import React, { useEffect, useState } from 'react'
 import CustomTable from './CustomTable'
 import { AnyObject } from '../apis/api_types'
