@@ -144,7 +144,7 @@ export default function TransactionLogsTable() {
             { key: 'id', label: 'Transaction ID' },
             { key: 'm_name', label: 'User Name' },
             { key: 'mobile_number', label: 'Mobile Number' },
-            { key: 'recharge_amount', label: 'Transaction Amount' },
+            { key: 'charge_amount', label: 'Charge Amount (tk)' },
             { key: 'ts', label: 'Transaction Time' },
           ]}
         />
