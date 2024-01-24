@@ -117,12 +117,12 @@ export default function OperatorScannerDeviceTable() {
             {
               name: 'operator_id',
               Label: 'Choose operator',
-              options: [{ label: 'Choose user type', value: '0' }, ...operators],
+              options: [{ label: 'None', value: null }, ...operators],
             },
             {
               name: 'nfc_scanner_device_id',
               Label: 'Choose NFC scanner device',
-              options: [{ label: 'Choose user type', value: '0' }, ...nfcSDevices],
+              options: [{ label: 'None', value: null }, ...nfcSDevices],
             },
           ]}
         />

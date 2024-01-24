@@ -89,7 +89,7 @@ export default function UsersTable() {
               name: 'user_type_id',
               Label: 'Choose user type',
               helper: 'type',
-              options: [{ label: 'Choose user type', value: '0' }, ...userTypesOptions],
+              options: [{ label: 'None', value: null }, ...userTypesOptions],
             },
           ]}
         />

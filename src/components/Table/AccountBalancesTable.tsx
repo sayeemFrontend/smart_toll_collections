@@ -54,7 +54,7 @@ export default function AccountBalancesTable() {
 
   const getUserTypes = async () => {
     await getApi({
-      end_point: 'users',
+      end_point: `users?user_type_id=2`,
       resolve: (res: ApiResPonseType) => setUsers(res.data as object[]),
     })
   }
@@ -81,12 +81,12 @@ export default function AccountBalancesTable() {
           btnLabel="Add"
           handleFormSubmit={handleFormData}
           formFields={[
-            { name: 'balance', Label: 'Balance', type: 'number' },
             {
               name: 'user_id',
               Label: 'Choose user',
-              options: [{ label: 'Choose user type', value: '0' }, ...userOptions],
+              options: [{ label: 'None', value: null }, ...userOptions],
             },
+            { name: 'balance', Label: 'Balance', type: 'number' },
           ]}
         />
       </CardBoxModal>

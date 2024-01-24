@@ -32,7 +32,7 @@ export default function UserVehicleTable() {
 
   const getOptionsData = async () => {
     await getMultipleApi({
-      end_points: ['users', 'nfc-card/all', 'common-api/vehicle-types'],
+      end_points: [`users?user_type_id=2`, 'nfc-card/all', 'common-api/vehicle-types'],
       resolve: ([users, nfcs, vehicles]: MultiApiResponse) => {
         if (users.status) {
           const data = users.data as AnyObject[]
@@ -133,17 +133,17 @@ export default function UserVehicleTable() {
             {
               name: 'user_id',
               Label: 'User',
-              options: [{ label: 'Choose', value: 'null' }, ...userOptions],
+              options: [{ label: 'None', value: null }, ...userOptions],
             },
             {
               name: 'nfc_card_no',
               Label: 'NFC CARD',
-              options: [{ label: 'Choose', value: 'null' }, ...nfcCardsOptions],
+              options: [{ label: 'None', value: null }, ...nfcCardsOptions],
             },
             {
               name: 'vehicle_type_id',
               Label: 'Vehicle type',
-              options: [{ label: 'Choose', value: 'null' }, ...vehicleTypesOptions],
+              options: [{ label: 'None', value: null }, ...vehicleTypesOptions],
             },
           ]}
         />

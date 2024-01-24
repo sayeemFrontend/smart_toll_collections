@@ -3,6 +3,7 @@
   "/_error": "pages/_error.js",
   "/_document": "pages/_document.js",
   "/dashboard": "pages/dashboard.js",
-  "/user-vehicle": "pages/user-vehicle.js",
-  "/account-balance": "pages/account-balance.js"
+  "/": "pages/index.js",
+  "/account-balance": "pages/account-balance.js",
+  "/login": "pages/login.js"
 }

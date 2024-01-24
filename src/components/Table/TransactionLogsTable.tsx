@@ -108,12 +108,12 @@ export default function TransactionLogsTable() {
             {
               name: 'operator_id',
               Label: 'Choose operator',
-              options: [{ label: 'Choose user type', value: '0' }, ...operators],
+              options: [{ label: 'None', value: '0' }, ...operators],
             },
             {
               name: 'nfc_card_no',
               Label: 'Choose nfc card',
-              options: [{ label: 'Choose user type', value: '0' }, ...nfcCards],
+              options: [{ label: 'None', value: '0' }, ...nfcCards],
             },
           ]}
         />

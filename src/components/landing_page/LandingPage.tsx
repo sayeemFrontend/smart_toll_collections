@@ -1,6 +1,5 @@
 import Hero from './land_components/Hero'
 import SectionTitle from './land_components/SectionTitle'
-import Video from './land_components/Video'
 import Testimonials from './land_components/Testimonials'
 import Faq from './land_components/Faq'
 import Cta from './land_components/Cta'
@@ -9,6 +8,7 @@ import PopupWidget from './land_components/PopupWidget'
 import Navbar from './land_components/Navbar'
 import Benefits from './land_components/Benefits'
 import { benefitOne } from './land_components/data'
+import Image from 'next/image'
 
 export default function LandingPage() {
   return (
@@ -23,12 +23,15 @@ export default function LandingPage() {
       </SectionTitle>
       <Benefits data={benefitOne} />
       {/* <Benefits imgPos="right" data={benefitTwo} /> */}
-      <SectionTitle pretitle="Watch a video" title="Learn how to fullfil your needs">
-        This section is to highlight a promo or demo video of your product. Analysts says a landing
-        page with video has 3% more conversion rate. So, don&apos;t forget to add one. Just like
-        this.
-      </SectionTitle>
-      <Video />
+      <SectionTitle pretitle="Watch a video" title="How fullfil your needs"></SectionTitle>
+      {/* <Video /> */}
+      <Image
+        className="w-full mx-auto"
+        width={600}
+        height={300}
+        src="/imageBack.jpg"
+        alt="backImage"
+      />
       <SectionTitle pretitle="Testimonials" title="what our customers said">
         We live with the brand trust and awareness. Some of our users comments, we appreciate any
         feedback..
