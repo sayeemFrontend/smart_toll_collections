@@ -20,7 +20,12 @@ export async function getUserInfo() {
       notify({ message: 'login success' })
       const { data } = res
       store.dispatch(userInfoSuccess({ data }))
-      redirectToRoute('/dashboard')
+      const { user_type_id } = data.user_type
+      if (user_type_id === SUPER_ADMIN) {
+        redirectToRoute('/dashboard')
+      } else {
+        redirectToRoute('/denied')
+      }
     },
     reject: () => {
       store.dispatch(userInfoFail())
